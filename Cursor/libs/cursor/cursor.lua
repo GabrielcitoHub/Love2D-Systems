@@ -117,7 +117,10 @@ function Cursor:updateState(cursor, dt, index)
     if cursor.controller == "mouse" then
         x, y = love.mouse.getPosition()
     elseif cursor.controller == "touch" then
-        x, y = mobile:getTouchPosition(1, true)
+        local touchposition = mobile:getTouchPosition(1, true)
+        if touchposition then
+            x, y = touchposition[1], touchposition[2]
+        end
     end
     cursor.position.x, cursor.position.y = x, y
 end
