@@ -8,6 +8,9 @@
 ---@field onPressed fun(self: CursorModule, cursor: CursorData)
 ---@field hold fun(self: CursorModule, cursor: CursorData, dt: integer)
 ---@field onReleased fun(self: CursorModule, cursor: CursorData)
+---@field touchpressed fun(self: CursorModule, id: integer, x: integer, y: integer, dx: integer, dy: integer, pressure: integer)
+---@field touchmoved fun(self: CursorModule, id: integer, x: integer, y: integer, dx: integer, dy: integer, pressure: integer)
+---@field touchreleased fun(self: CursorModule, id: integer, x: integer, y: integer, dx: integer, dy: integer, pressure: integer)
 
 ---@class CursorData
 ---@field path string
@@ -97,6 +100,20 @@ end
 function Cursor:updateState(cursor, dt, index)
     local oldcursor = cursor
 
+    if cursor.type == "static" then
+        -- Static does do anything lol
+    elseif cursor.type == "dynamic" then
+        if cursor.controller == "mouse" then
+            if mobile.mobile then
+                cursor.controller = "touch"
+            end
+        elseif cursor.controller == "touch" then
+            if not mobile.mobile then
+                cursor.controller = "mouse"
+            end
+        end
+    end
+
     if cursor.controller == "mouse" then
         cursor.down = love.mouse.isDown(1)
     elseif cursor.controller == "touch" then
@@ -108,10 +125,10 @@ function Cursor:updateState(cursor, dt, index)
     end
 
     if cursor.state == "idle" then
+        if Cursor.idle then
+            Cursor:idle(cursor, dt)
+        end
         if cursor.down then
-            if Cursor.idle then
-                Cursor:idle(cursor, dt)
-            end
             cursor.state = "click"
         end
     elseif cursor.state == "click" then
@@ -133,27 +150,6 @@ function Cursor:updateState(cursor, dt, index)
         cursor.state = "idle"
     end
 
-    if cursor.type == "static" then
-        -- Static does do anything lol
-    elseif cursor.type == "dynamic" then
-        if cursor.controller == "mouse" then
-            if mobile.mobile then
-                cursor.controller = "touch"
-            end
-        elseif cursor.controller == "touch" then
-            if not mobile.mobile then
-                cursor.controller = "mouse"
-            end
-        end
-    end
-
-    -- Update changes (if any)
-    if oldcursor ~= cursor then
-        if index then
-            Cursor.cursors[index] = cursor
-        end
-    end
-
     local x,y = 0, 0
 
     if cursor.controller == "mouse" then
@@ -165,9 +161,29 @@ function Cursor:updateState(cursor, dt, index)
         end
     end
     cursor.position.x, cursor.position.y = x, y
+
+    -- Update changes (if any)
+    if oldcursor ~= cursor then
+        if index then
+            Cursor.cursors[index] = cursor
+        end
+    end
+end
+
+function Cursor:touchpressed(id, x, y, dx, dy, pressure)
+    mobile:touchpressed(id, x, y, dx, dy, pressure)
+end
+
+function Cursor:touchmoved(id, x, y, dx, dy, pressure)
+    mobile:touchmoved(id, x, y, dx, dy, pressure)
+end
+
+function Cursor:touchreleased(id, x, y, dx, dy, pressure)
+    mobile:touchreleased(id, x, y, dx, dy, pressure)
 end
 
 function Cursor:update(dt)
+    mobile:update()
     for index,cursor in pairs(Cursor.cursors) do
         if cursor.active then
             Cursor:updateState(cursor, dt, index)
