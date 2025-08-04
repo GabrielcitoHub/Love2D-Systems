@@ -36,11 +36,20 @@ end
 function love.update(dt)
     -- change some values based on your actions
     CCCursors.cursor:update(dt)
+    mobile:update()
     love.keyboard.keysPressed = {}
+end
+
+function love.touchpressed(id, x, y, dx, dy, pressure)
+    mobile:touchpressed(id, x, y, dx, dy, pressure)
 end
 
 function love.touchmoved(id, x, y, dx, dy, pressure)
     mobile:touchmoved(id, x, y, dx, dy, pressure)
+end
+
+function love.touchreleased(id, x, y, dx, dy, pressure)
+    mobile:touchreleased(id, x, y, dx, dy, pressure)
 end
 
 function love.draw()
