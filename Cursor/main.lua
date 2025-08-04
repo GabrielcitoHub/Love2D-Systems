@@ -2,6 +2,8 @@
     Your love2d game start here
 ]]
 
+CCCursors = require "libs/cursor"
+mobile = require "libs/mobile"
 
 love.graphics.setDefaultFilter('nearest', 'nearest')
 
@@ -9,12 +11,18 @@ function love.load()
     -- init something here ...
     love.mouse.setVisible(false)
 
-    CCCursors = require "libs/cursor"
-    mobile = require "libs/mobile"
     love.window.setTitle('Hello love2d!')
     cursor = CCCursors.cursor:newCursor(1)
 
     love.keyboard.keysPressed = {}
+end
+
+function CCCursors.cursor:onPressed(cursor)
+    print("A cursor was pressed!")
+end
+
+function CCCursors.cursor:onReleased(cursor)
+    print("A cursor was released!")
 end
 
 function love.resize(w, h)
