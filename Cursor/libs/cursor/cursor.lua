@@ -3,7 +3,7 @@
 ---@field newCursor fun(self: CursorModule, id: string|integer|nil, sprite: string|nil, width: number|nil, height: number|nil, rotation: number|nil, active: boolean|nil): CursorData?
 ---@field update fun(self: CursorModule, dt: number)
 ---@field draw fun(self: CursorModule)
----@field updateState fun(self: CursorModule, cursor: CursorData, dt: number)
+---@field updateState fun(self: CursorModule, cursor: CursorData, dt: number, index:string|integer|nil?)
 
 ---@class CursorData
 ---@field path string
@@ -26,6 +26,11 @@ local info = debug.getinfo(1, "S").source
 local basePath = info:match("@(.*/)")
 basePath = basePath and basePath:gsub("\\", "/") or ""
 basePath = basePath:gsub("^./", "")  -- make relative to root
+
+-- Get the parent directory by removing the last segment
+local parentPath = basePath:match("(.*/)[^/]*$")
+
+local mobile = require(parentPath .. "mobile.lua")
 
 Cursor.cursors = {}
 -- print("Created cursors")
@@ -78,21 +83,44 @@ function Cursor:newCursor(id, sprite, width, height, rotation, active)
     return data
 end
 
-function Cursor:updateState(cursor, dt)
+function Cursor:updateState(cursor, dt, index)
     if cursor.state == "idle" then
     elseif cursor.state == "click" then
     elseif cursor.state == "release" then
     end
 
-    if cursor.controller == "mouse" then
-        cursor.position.x, cursor.position.y = love.mouse.getPosition()
+    if cursor.type == "static" then
+        -- Static does do anything lol
+    elseif cursor.type == "dynamic" then
+        if index then
+            if cursor.controller == "mouse" then
+                if mobile.mobile then
+                    cursor.controller = "touch"
+                    Cursor.cursors[index] = cursor
+                end
+            elseif cursor.controller == "touch" then
+                if not mobile.mobile then
+                    cursor.controller = "mouse"
+                    Cursor.cursors[index] = cursor
+                end
+            end
+        end
     end
+
+    local x,y = 0, 0
+
+    if cursor.controller == "mouse" then
+        x, y = love.mouse.getPosition()
+    elseif cursor.controller == "touch" then
+        x, y = mobile:getTouchPosition(1, true)
+    end
+    cursor.position.x, cursor.position.y = x, y
 end
 
 function Cursor:update(dt)
     for index,cursor in pairs(Cursor.cursors) do
         if cursor.active then
-            Cursor:updateState(cursor, dt)
+            Cursor:updateState(cursor, dt, index)
         end
     end
 end
@@ -106,7 +134,5 @@ function Cursor:draw()
         end
     end
 end
-
-
 
 return Cursor
