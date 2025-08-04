@@ -21,6 +21,10 @@
 ---@diagnostic disable-next-line
 local Cursor = {}
 
+local function getParentFolder(path)
+    return path:match("(.*/)[^/]+/?$") or ""
+end
+
 -- Get the current file's path
 local info = debug.getinfo(1, "S").source
 local basePath = info:match("@(.*/)")
@@ -28,9 +32,10 @@ basePath = basePath and basePath:gsub("\\", "/") or ""
 basePath = basePath:gsub("^./", "")  -- make relative to root
 
 -- Get the parent directory by removing the last segment
-local parentPath = basePath:match("(.*/)[^/]*$")
+local parentPath = getParentFolder(basePath)
+-- print("Parent Path:", parentPath)
 
-local mobile = require(parentPath .. "mobile.lua")
+local mobile = require(parentPath .. "mobile")
 
 Cursor.cursors = {}
 -- print("Created cursors")
