@@ -18,13 +18,14 @@ end
 
 function CCCursors.cursor:idle(cursor)
     local cursorpos = cursor.position
-    print("A cursor is idling!")
+    -- print("A cursor is idling!")
     if cursorpos then
         print(tostring(cursorpos["x"] .. " / " .. cursorpos["y"]))
     end
 end
 
 function CCCursors.cursor:onPressed(cursor)
+    love.audio.newSource("click.wav","static"):play()
     local cursorpos = cursor.position
     print("A cursor was pressed!")
     if cursorpos then
@@ -33,7 +34,7 @@ function CCCursors.cursor:onPressed(cursor)
 end
 
 function CCCursors.cursor:hold(cursor)
-    print("A cursor is being hold!")
+    -- print("A cursor is being hold!")
 end
 
 function CCCursors.cursor:onReleased(cursor)
@@ -42,14 +43,6 @@ end
 
 function love.resize(w, h)
     -- ...
-end
-
-function love.keypressed(key)
-    if key == 'escape' then
-        love.event.quit()
-    end
-
-    love.keyboard.keysPressed[key] = true
 end
 
 function love.keyboard.wasPressed(key)
@@ -61,6 +54,19 @@ function love.update(dt)
     CCCursors.cursor:update(dt)
     love.keyboard.keysPressed = {}
 end
+
+-- Keyboard support
+
+function love.keypressed(key, scancode, isrepeat)
+    CCCursors.cursor:keypressed(key, scancode, isrepeat)
+    if key == 'escape' then
+        love.event.quit()
+    end
+
+    love.keyboard.keysPressed[key] = true
+end
+
+-- Mobile support
 
 function love.touchpressed(id, x, y, dx, dy, pressure)
     CCCursors.cursor:touchpressed(id, x, y, dx, dy, pressure)
