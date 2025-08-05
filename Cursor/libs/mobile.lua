@@ -15,10 +15,8 @@ function mobile:touchreleased(id, x, y, dx, dy, pressure)
     mobile.touches[id] = nil
 end
 
-function mobile:update()
-    if love.keyboard.keysPressed then
-        mobile.mobile = false
-    end
+function mobile:keypressed(key, scancode, isrepeat)
+    mobile.mobile = false
 end
 
 function mobile:draw()
