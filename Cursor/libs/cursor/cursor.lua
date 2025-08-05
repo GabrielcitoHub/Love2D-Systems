@@ -151,14 +151,14 @@ function Cursor:updateState(cursor, dt, index)
         cursor.state = "idle"
     end
 
-    local x,y = 0, 0
+    local x,y = cursor.position.x, cursor.position.y
 
     if cursor.controller == "mouse" then
         x, y = love.mouse.getPosition()
     elseif cursor.controller == "touch" then
         local touchposition = mobile:getTouchPosition(1, true)
         if touchposition then
-            x, y = touchposition[1], touchposition[2]
+            x, y = touchposition["x"], touchposition["y"]
         end
     end
     cursor.position.x, cursor.position.y = x, y
@@ -200,7 +200,10 @@ function Cursor:update(dt)
 end
 
 function Cursor:draw()
+    mobile:draw()
+    local touchposition = mobile:getTouchPosition(1, true) or {x = "ERROR", y = "ERROR"}
     for index,cursor in pairs(Cursor.cursors) do
+        love.graphics.print("Debug X:" .. cursor.position.x .. " Y:" .. cursor.position.y .. " TouchX:" .. touchposition["x"] .. " TouchY:" .. touchposition["y"] .. " Touches:" .. #mobile.touches .. " ParentPath:" .. parentPath .. " MobileModule:" .. tostring(mobile),0 ,20)
         if cursor.active then
             love.graphics.setColor(cursor.color.red, cursor.color.green, cursor.color.blue, cursor.color.alpha)
             love.graphics.draw(cursor.sprite, cursor.position.x, cursor.position.y, cursor.position.rotation, cursor.size.width / 16, cursor.size.height / 16)
