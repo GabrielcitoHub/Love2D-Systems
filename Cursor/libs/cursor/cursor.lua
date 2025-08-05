@@ -11,6 +11,7 @@
 ---@field touchpressed fun(self: CursorModule, id: integer, x: integer, y: integer, dx: integer, dy: integer, pressure: integer)
 ---@field touchmoved fun(self: CursorModule, id: integer, x: integer, y: integer, dx: integer, dy: integer, pressure: integer)
 ---@field touchreleased fun(self: CursorModule, id: integer, x: integer, y: integer, dx: integer, dy: integer, pressure: integer)
+---@field keypressed fun(self?: CursorModule, key?: string, scancode?: string ,isrepeat?: boolean)
 
 ---@class CursorData
 ---@field path string
@@ -170,6 +171,14 @@ function Cursor:updateState(cursor, dt, index)
     end
 end
 
+-- Keyboard support
+
+function Cursor:keypressed(key, scancode, isrepeat)
+    mobile:keypressed(key, scancode, isrepeat)
+end
+
+-- Mobile support
+
 function Cursor:touchpressed(id, x, y, dx, dy, pressure)
     mobile:touchpressed(id, x, y, dx, dy, pressure)
 end
@@ -183,7 +192,6 @@ function Cursor:touchreleased(id, x, y, dx, dy, pressure)
 end
 
 function Cursor:update(dt)
-    mobile:update()
     for index,cursor in pairs(Cursor.cursors) do
         if cursor.active then
             Cursor:updateState(cursor, dt, index)
