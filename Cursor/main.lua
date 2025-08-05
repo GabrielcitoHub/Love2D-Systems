@@ -11,6 +11,7 @@ function love.load()
     love.mouse.setVisible(false)
 
     love.window.setTitle('Hello love2d!')
+---@diagnostic disable-next-line
     cursor = CCCursors.cursor:newCursor(1)
 
     love.keyboard.keysPressed = {}
