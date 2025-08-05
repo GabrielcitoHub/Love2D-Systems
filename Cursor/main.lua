@@ -83,5 +83,5 @@ end
 function love.draw()
     -- draw your stuff here
     CCCursors.cursor:draw()
-    love.graphics.print('Welcome to the Love2d world! ' .. #CCCursors.cursor.cursors, 10, 10)
+    love.graphics.print('Welcome to the Love2d world! ' .. #CCCursors.cursor.cursors .. " " .. cursor.controller, 10, 10)
 end
