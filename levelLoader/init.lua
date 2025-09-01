@@ -18,7 +18,7 @@ local parentPath = basePath:match("(.*/)[^/]+/?$") or ""
 
 local utils = require(basePath .. "utils")
 local sti = require(basePath .. "sti")
-local windfield = require(basePath .. "windfield/windfield")
+LevelLoader.windfield = require(basePath .. "windfield/windfield")
 
 local function setplrvariables(plr, plrdata)
     plr:setFixedRotation(true)
