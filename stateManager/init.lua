@@ -32,12 +32,13 @@ end
 -- Loads a state into the state manager
 ---@param newstate string
 function stateManager:loadState(newstate)
-    if newstate then
-        stateManager.setpath = newstate
-    elseif not stateManager.setpath then
-        stateManager.setpath = "states/"
+    local newpath
+    if stateManager.setpath then
+        newpath = stateManager.setpath .. newstate
+    else
+        newpath = "states/" .. newstate
     end
-    local searchpath = stateManager.setpath
+    local searchpath = newpath
     if not love.filesystem.getInfo(searchpath) then
         for _,state in pairs(love.filesystem.getDirectoryItems("states")) do
             if state == newstate then
