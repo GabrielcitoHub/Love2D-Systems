@@ -26,19 +26,18 @@ local utils = require(basePath .. "utils")
 -- Sets a new path to search for states paths
 ---@param newfolder string
 function stateManager:setStatesPath(newfolder)
-    state.setpath = newfolder
+    stateManager.setpath = newfolder
 end
 
 -- Loads a state into the state manager
 ---@param newstate string
 function stateManager:loadState(newstate)
-    local searchpath
     if newstate then
-        state.setpath = newstate
-    elseif not state.setpath then
-        state.setpath = "states/"
+        stateManager.setpath = newstate
+    elseif not stateManager.setpath then
+        stateManager.setpath = "states/"
     end
-    local searchpath = state.setpath
+    local searchpath = stateManager.setpath
     if not love.filesystem.getInfo(searchpath) then
         for _,state in pairs(love.filesystem.getDirectoryItems("states")) do
             if state == newstate then
