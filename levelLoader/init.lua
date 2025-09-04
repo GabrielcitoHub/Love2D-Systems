@@ -16,7 +16,6 @@ basePath = basePath and basePath:gsub("\\", "/") or ""
 basePath = basePath:gsub("^./", "")  -- make relative to root
 local parentPath = basePath:match("(.*/)[^/]+/?$") or ""
 
-local utils = require(basePath .. "utils")
 local sti = require(basePath .. "sti")
 LevelLoader.windfield = require(basePath .. "windfield/windfield")
 

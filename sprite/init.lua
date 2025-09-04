@@ -15,7 +15,6 @@ basePath = basePath and basePath:gsub("\\", "/") or ""
 basePath = basePath:gsub("^./", "")  -- make relative to root
 local parentPath = basePath:match("(.*/)[^/]+/?$") or ""
 
-local utils = require(basePath .. "utils")
 -- I made this!
 -- (This took waaay too long to make... but it was worth it, imma finish the menu later)
 -- G

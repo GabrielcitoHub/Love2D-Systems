@@ -15,8 +15,6 @@ basePath = basePath and basePath:gsub("\\", "/") or ""
 basePath = basePath:gsub("^./", "")  -- make relative to root
 local parentPath = basePath:match("(.*/)[^/]+/?$") or ""
 
-local utils = require(basePath .. "utils")
-
 -- function safeStateCall(funcName) -- Only use IF EXTREMELY NECCESARY, IT LAGS REALLY BAD
 --     if stateManager.state[funcName] ~= nil then
 --         stateManager.state[funcName]()
