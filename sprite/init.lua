@@ -27,11 +27,9 @@ end
 
 function spritemanager:findImage(path)
     if not path then
-        warn("Invalid sprite path (nil)")
+        print("Invalid sprite path (nil)")
         return
     end
-
-    utils:findFile(path)
 
     local paths = {"assets/images/","assets/",""}
     local extensions = {".png", ""}
@@ -45,8 +43,9 @@ function spritemanager:findImage(path)
             end
         end
     end
-    warn("image " .. path .. " not found")
-    return love.graphics.newImage("assets/images/placeholders/PLACEHOLDER.png")
+    
+    print("image " .. path .. " not found")
+    return love.graphics.newImage(basePath .. "/PLACEHOLDER.png")
 end
 
 function spritemanager:makeLuaSprite(tag,path,x,y)
